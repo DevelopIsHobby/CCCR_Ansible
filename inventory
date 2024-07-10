@@ -1,0 +1,9 @@
+[control]
+controller ansible_host=192.168.56.5 ansible_connection=local
+ 
+[manage]
+webserver ansible_host=10.0.2.4
+webserver2 ansible_host=10.0.2.7
+dbserver ansible_host=192.168.56.4
+storage ansible_host=192.168.56.7
+dns ansible_host=192.168.56.8

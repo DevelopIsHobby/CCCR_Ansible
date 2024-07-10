@@ -1,0 +1,48 @@
+---
+- hosts: storage
+  become: yes
+  remote_user: devops
+  tasks:
+    - name: Install required packages for iSCSI target
+      package:
+        name: targetcli
+        state: present
+    
+    - name: Create Parition
+      parted:
+        device: /dev/sdc
+        number: 1
+        flags: [lvm]
+        state: present
+    - name: Create iSCSI target
+      command: targetcli "/backstores/block create name=iscsi_disk dev=/dev/sdc"
+    - name: Create IQN
+      command: targetcli "/iscsi create wwn=iqn.2024-05.com.webserver:www"
+    - name: Create ACLS
+      command: targetcli "/iscsi/iqn.2024-05.com.webserver:www/tpg1/acls create wwn=iqn.2024-05.com.webserver:devops"
+      changed_when: false
+    - name: Create LUN
+      command: targetcli "/iscsi/iqn.2024-05.com.webserver:www/tpg1/luns create storage_object=/backstores/block/iscsi_disk"
+      changed_when: false
+    - name: Delete portals
+      command: targetcli "/iscsi/iqn.2024-05.com.webserver:www/tpg1/portals delete 0.0.0.0 3260"
+      changed_when: false
+    - name: Create portals
+      command: targetcli "/iscsi/iqn.2024-05.com.webserver:www/tpg1/portals create 192.168.56.7 3260"
+      changed_when: false
+    - name: Save iSCSI target
+      command: targetcli "saveconfig"
+      changed_when: false
+
+
+    - name: Start iSCSI
+      service: 
+        name: target
+        state: started
+        enabled: true
+    - name: Open iSCSI
+      firewalld:
+        immediate: true
+        permanent: true
+        port: 3260/tcp
+        state: enabled

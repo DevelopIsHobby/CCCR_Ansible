@@ -1,0 +1,71 @@
+---
+- hosts: dbserver
+  become: true
+  remote_user: devops
+
+  tasks:
+  - name: Install necessary packages for  SELinux
+    yum:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - libsemanage-python        # 불린 관련 SELinux 파이썬 모듈
+      - policycoreutils-python     # Semanage 설치 파이썬 모듈
+
+  - name: Stop MariaDB service
+    systemd:
+      name: mariadb
+      state: stopped
+
+  - name: Move Mariadb data directory
+    command: mv /var/lib/mysql /db
+    args:
+      creates: /db/mysql    # 이미 이동된 경우엔 실행하지 않음
+
+  - name: Change ownership of /db directory to mysql:mysql
+    file:
+      path: /db
+      owner: mysql
+      group: mysql
+      recurse: true
+  - name: Modify MariaDB configuration file to use new directory
+    lineinfile:
+      path: /etc/my.cnf
+      regexp: '^datadir=/var/lib/mysql'
+      line: 'datadir=/db/mysql'
+  - name: Modify MariaDB configuration file to use new directory2
+    lineinfile:
+      path: /etc/my.cnf
+      regexp: '^socket=/var/lib/mysql/mysql.sock'
+      line: 'socket=/db/mysql/mysql.sock'
+  - name: Modify MariaDB configuration file to use new directory3
+    lineinfile:                   # 나중에 변경한 부분(캡처에 반영안됨)
+      path: /etc/my.cnf
+      insertafter: ‘socket=/db/mysql/mysql.sock’
+      line: |
+        [client]
+        socket=/db/mysql/mysql.sock
+
+  - name: Add SELinux file context for /db
+    command: semanage fcontext -a -t 'mysqld_db_t' "/db(/.*)?"
+    changed_when: false
+
+  - name: Restore SELinux file context for /db directory
+    command: restorecon -FRv /db/mysql
+    changed_when: false
+  - name: Add After and Requires directivs to mariadb.service
+    lineinfile:                # 재부팅시 Mariadb 꺼지는 현상 해결
+      path: /usr/lib/systemd/system/mariadb.service
+      insertafter: '^After=network.target'
+      line: |
+        After=remote-fs.target
+        Requires=iscsi.service
+
+  - name: Reload systemd manager configuration
+    systemd:
+      daemon-reload: true
+  
+  - name: Start Mariadb Service
+    systemd:
+      name: mariadb
+      state: started

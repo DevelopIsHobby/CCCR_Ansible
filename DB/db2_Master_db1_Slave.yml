@@ -1,0 +1,36 @@
+---
+- name: MySQL setting Slave
+  hosts: dbserver
+  become: true
+  remote_user: devops
+  tasks:
+  - name: Stop Slave
+    mysql_replication:
+      mode: stopreplica
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+
+  - name: Configure Slave
+    mysql_replication:
+      master_host: 192.168.56.6
+      master_user: user01
+      master_port: 3306
+      master_password: user01
+      master_log_file: 'mariadb.000003'    # DB2에서 확인
+      master_log_pos: 3335
+      mode: changeprimary
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+
+  - name: start Slave
+    mysql_replication:
+      mode: startreplica
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+

@@ -1,0 +1,129 @@
+---
+- name: MySQL setting Master
+  hosts: dbserver
+  become: true
+  remote_user: devops
+  tasks: 
+  - name: Create db                  # db1, db2에 동일한 데이터베이스, 유저 생성
+    mysql_db:
+      name: slave_test;
+      state: present
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+  - name: Set privilege              
+    mysql_user:
+      name: user01
+      password: user01
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+      priv: "slave_test.*:All"
+      host: '%'
+      state: present
+  - name: Set REPLICATION SLAVE privilege            # 마스터 서버에 슬레이브 서버 등록  
+    mysql_user:
+      name: user01
+      password: user01
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+      priv: "*.*:REPLICATION SLAVE"
+      host: '%'
+      state: present
+  - name: Flush privileges
+    mysql_query:
+      query: "Flush privileges;"
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+  - name: Open Port
+    firewalld:
+      immediate: true
+      permanent: true
+      service: mysql
+      state: enabled
+
+- name: MySQL setting Slave
+  hosts: dbserver2
+  become: true
+  remote_user: devops
+  tasks:
+  - name: Open port
+    firewalld:
+      immediate: true
+      permanent: true
+      service: mysql
+      state: enabled
+
+  - name: Create db                  
+    mysql_db:
+      name: slave_test;
+      state: present
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+  - name: Set privilege              
+    mysql_user:
+      name: user01
+      password: user01
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+      priv: "slave_test.*:All"
+      host: '%'
+      state: present
+  - name: Set REPLICATION SLAVE privilege         # 양방향(마스터-마스터)할 때 필요     
+    mysql_user:
+      name: user01
+      password: user01
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+      priv: "*.*:REPLICATION SLAVE"
+      host: '%'
+      state: present
+
+  - name: Flush privileges
+    mysql_query:
+      query: "Flush privileges;"
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+
+  - name: Stop Slave
+    mysql_replication:
+      mode: stopreplica
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+  - name: Configure Slave
+    mysql_replication:
+      master_host: 192.168.56.4
+      master_user: user01
+      master_port: 3306
+      master_password: user01
+      master_log_file: 'mariadb.000002'  # 마스터 서버(db01)가서 show master status; 확인 후 입력
+      master_log_pos: 1803      # 마스터 서버(db01)가서 show master status; 확인 후 입력
+      mode: changeprimary
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+
+  - name: start Slave
+    mysql_replication:
+      mode: startreplica
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf

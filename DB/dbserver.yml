@@ -1,0 +1,58 @@
+---
+- hosts: dbserver
+  become: true
+  remote_user: devops
+  tasks:
+  - name: Install MariaDB-Server and firewalld # Mariadb-server와 방화벽 설치
+    yum:
+      name:
+      - mariadb-server
+      - firewalld
+  - name: firewalld enabled and running     # 방화벽 서비스 시작
+    service:
+      name: firewalld
+      enabled: true
+      state: started
+  - name: Start Mariadb     # MariaDB 시작
+    service:
+      name: mariadb
+      state: started
+      enabled: true
+  - name: Open mysql       # MariaDB 방화벽 개방
+    firewalld:
+      immediate: true
+      permanent: true
+      service: mysql
+      state: enabled
+  - name: Open port for MySQL     # MariaDB 포트 개방(서비스 시작해서 안해도 됨)
+    firewalld:
+      port: 3306/tcp
+      permanent: yes
+      state: enabled
+  - name: Install MySQL-python module          # MariaDB 모듈 시작
+    yum:
+      name: MySQL-python
+      state: latest
+  - name: Change root passwd                  # root 비밀번호 변경
+    mysql_user:
+      name: root
+      login_user: root
+      login_password: ''
+      login_host: localhost
+      password: root
+  - name: Create db                  # wordpress Database 생성
+    mysql_db:
+      name: wordpress
+      login_user: root
+      login_password: root
+      login_host: localhost
+  - name: Set privilege              # wordpress 사용자 wpadmin 권한 부여
+    mysql_user:
+      name: wpadmin
+      password: wpadmin
+      login_user: root
+      login_password: root
+      login_host: localhost
+      priv: wordpress.*:All,GRANT
+      host: '%'
+      state: present

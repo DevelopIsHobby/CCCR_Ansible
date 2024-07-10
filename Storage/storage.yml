@@ -1,0 +1,105 @@
+---
+# Storage 서버 세팅
+- hosts: storage
+  remote_user: devops
+  become: yes
+  tasks:
+    # 추가한 디스크 + 관리노드 마운팅
+    - name: Install nfs-utils
+      yum: 
+        name: nfs-utils
+        state: present
+    - name: Create /wordpress
+      file:
+        path: /wordpress
+        state: directory
+        mode: '775'
+    - name: Create Partition     # 추가한 /dev/sdb를 파티셔닝 + 논리볼륨생성
+      parted:
+        device: /dev/sdb
+        number: 1
+        flags: [lvm]
+        state: present
+    - name: EXT4 File system 
+      filesystem:
+        fstype: ext4
+        dev: /dev/sdb1
+    - name: mount /wordpress     # /dev/sdb1에 /wordpress를 마운트
+      mount:
+        path: /wordpress
+        src: /dev/sdb1
+        fstype: ext4
+        state: mounted
+    # NFS 공유 폴더 내보내기 + wordpress 다운로드
+    - name: Export dir       # nfs Directory(/wordpress) 내보내기
+      lineinfile:            # 파일 안에 내용 적는 모듈
+        path: /etc/exports
+        insertafter: ''
+        line: '/wordpress 192.168.56.0/24(rw,sync,no_root_squash)'
+  - name: Get /wordpress
+      get_url:
+        dest: /wordpress/latest.tar.gz # 최신 버전의 워드프레스 저장 위치
+        url: https://wordpress.org/latest.tar.gz # 최신 버전의 워드프레스 소스
+    - name: Unzip wordpress
+      unarchive:
+        remote_src: yes  # src가 로컬이 아닌 원격에 위치함을 의미
+        src: /wordpress/latest.tar.gz # 원격 소스(워드프레스)
+        dest: /wordpress/  # 압축 해제 저장 위치
+    - name: Copy wp-config
+      copy:
+        src: /wordpress/wordpress/wp-config-sample.php
+        dest: /wordpress/wordpress/wp-config.php
+        remote_src: yes
+
+    # Wordpress DB 연결
+    - name: Change DB name
+      replace: 
+        dest: /wordpress/wordpress/wp-config.php
+        regexp: username_here
+        replace: wpadmin
+    - name: Change User pw
+      replace:
+        dest: /wordpress/wordpress/wp-config.php
+        regexp: password_here
+        replace: wpadmin
+    - name: Change hosts
+      replace:
+        dest: /wordpress/wordpress/wp-config.php
+        regexp: localhost
+        replace: 192.168.56.4
+        
+      # NFS
+    - name: Start nfs service
+      service:
+        name: nfs
+        enabled: true
+        state: started
+    - name: Open port for nfs
+      firewalld:
+        service: nfs
+        permanent: yes
+        state: enabled
+        immediate: yes
+    # NFS는 RPC를 사용함
+    # NFS와 NFS가 사용하는 포트 번호를 매핑
+    # 클라이언트와 서버간의 통신을 관리
+    - name: Open port for rpc-bind
+      firewalld:
+        service: rpc-bind
+        permanent: yes
+        state: enabled
+        immediate: yes
+    # NFS 클라이언트가 NFS 서버에 마운트할 때 사용하는 포트
+    # mounted 서비스가 더이상 제공되지 않아 NFS를 실행하늗네 필요한 포트를 개방해준다.
+  - name: Open port for NFS
+    firewalld:
+      port: "{{ item }}"
+      permanent: yes
+      state: enabled
+      immediate: yes
+    loop:
+      - 111/tcp
+      - 2049/tcp
+      - 32803/tcp
+      - 892/tcp
+      - 875/tcp

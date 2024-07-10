@@ -1,0 +1,54 @@
+---
+- hosts: dns
+  become: true
+  remote_user: devops
+  tasks:
+  - name: Install epel-release, semanage
+    yum:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - epel-release
+      - libsemanage-python
+
+  - name: Install haproxy
+    yum: 
+      name: haproxy
+      state: present
+  - name: Open http
+    firewalld:
+      service: http
+      permanent: true
+      immediate: true
+      state: enabled
+  
+  - name: Active seboolean for httpd
+    seboolean:
+      name: haproxy_connect_any
+      state: true
+      persistent: true
+  - name: Set haproxy fronted port
+    replace:
+      path: /etc/haproxy/haproxy.cfg
+      regexp: '\*:5000'
+      replace: '*:80'
+  - name: Allow CSS & JS
+    replace:
+      path: /etc/haproxy/haproxy.cfg
+      regexp: use_backend static
+      replace: '#user_backend static'
+  - name: Set webserver1 backend1
+    replace:
+      path: /etc/haproxy/haproxy.cfg
+      regexp: server  app1 127.0.0.1:5001 check
+      replace: server  webserver1 192.168.56.101
+  - name: Set webserver2 backend2
+    replace:
+      path: /etc/haproxy/haproxy.cfg
+      regexp: server  app2 127.0.0.1:5001 check
+      replace: server  webserver2 192.168.56.3
+  - name: Start haproxy service
+    service:
+      name: haproxy
+      enabled: true
+      state: started

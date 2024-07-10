@@ -1,0 +1,64 @@
+---
+- hosts: dns
+  become: true
+  remote_user: devops
+  tasks:
+  - name: Install Bind package
+    yum:
+      name: bind
+      state: present
+  - name: Configure 
+    block:
+      - name: Configure /etc/named.conf
+        replace:
+          path: /etc/named.conf
+          regexp: "{{ item }}"
+          replace: 'any;'
+        loop:
+          - '127.0.0.1;'
+          - '::1;'
+            - 'localhost;'
+      - name: Configure /etc/named.rfc1912.zones
+        blockinfile:
+          path: /etc/named.rfc1912.zones
+          marker: "# Domain zones"
+          block: |
+              zone "webserver.com" IN {
+                      type master;
+                      file "webserver.com.zone";
+                      allow-update { none; };
+              };
+
+      - name: Create "webserver.com.zone" Zone file
+        copy:
+          dest: /var/named/webserver.com.zone
+          content: |
+              $TTL 1D
+              @   IN SOA  webserver.com. hostmaster.webserver.com. (
+                          0   ; serial
+                          1D  ; refresh
+                          1H  ; retry
+                          1W  ; expire
+                          3H ) ; minimum
+                  IN  NS  dns.webserver.com.
+              www IN  A   192.168.56.8
+              dns IN  A   10.0.2.16
+          owner: named
+          group: named
+          mode: '0644'
+      - name: Configure /etc/resolv.conf
+        replace:
+          path: /etc/resolv.conf
+          regexp: '10.0.2.1'
+          replace: '10.0.2.8'
+  - name: Restart named service
+    systemd:
+      name: named
+      state: restarted
+      enabled: true
+  - name: ADD DNS service
+    firewalld:
+      service: dns
+      state: enabled
+      immediate: true
+      permanent: true    

@@ -1,0 +1,12 @@
+<VirtualHost *:80>
+    DocumentRoot "{{ document_root }}"
+    ServerName {{ server_name }}
+    ErrorLog "{{ error_log }}"
+    CustomLog "{{ custom_log }}" common
+</VirtualHost>
+ 
+<Directory "{{ document_root }}">
+    Options Indexes FollowSymLinks
+    AllowOverride None
+    Require all granted
+</Directory>

@@ -1,0 +1,45 @@
+---
+- hosts: dbserver
+  become: yes
+  remote_user: devops
+  tasks:
+    - name: Install iscsi-initiator-utils package
+      package:
+        name: iscsi-initiator-utils
+        state: present
+    - name: Configure iSCSI initiator
+      shell: |
+        echo "InitiatorName=iqn.2024-05.com.webserver:devops" > /etc/iscsi/initiatorname.iscsi
+    - name: Start iSCSI
+      service:
+        name: iscsi
+        state: started
+        enabled: true
+    - name: Open iSCSI
+      firewalld:
+        immediate: true
+        permanent: true
+        port: 3260/tcp
+        state: enabled
+ 
+    - name: Discover iSCSI targets
+      command: iscsiadm --mode discovery -t st -p 192.168.56.7:3260
+    - name: Login to iSCSI targets
+      command: iscsiadm -m node -T iqn.2024-05.com.webserver:www -p 192.168.56.7:3260 -l
+ 
+    - name: Create /db
+      file:
+        path: /db
+        state: directory
+        mode: '775'
+    - name: Ext4 File system
+      filesystem:
+        fstype: ext4
+        dev: /dev/sdb
+    - name: mount /db
+      mount:
+        path: /db
+        src: /dev/sdb
+        fstype: ext4
+        opts: _netdev  # 네트워크 파일시스템에 대한 마운트를 지연시킨다.
+       state: mounted

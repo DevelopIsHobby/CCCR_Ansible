@@ -1,0 +1,39 @@
+---
+- name: Create user without password
+  hosts: dbserver
+  become: true
+  remote_user: devops
+  tasks:
+  - name: Create user02 and set privileges    # 비밀번호가 없는 사용자 생성 
+    mysql_user:
+      name: user02
+      password: ''
+      login_user: root
+      login_password: root
+      login_host: localhost
+      config_file: /etc/my.cnf
+      priv: '*.*:All,GRANT'
+      host: '%'
+      state: present
+
+- name: Haproxy Configuration
+  hosts: dns
+  become: true
+  remote_user: devops
+  tasks:
+  - name: Open port for MariaDB     # MariaDB 포트 개방(서비스 시작해서 안해도 됨)
+    firewalld:
+      port: 3306/tcp
+      permanent: yes
+      state: enabled
+      
+  - name: Set db1, db2 backend
+    template:
+      src: templates/haproxy.cfg.j2
+      dest: /etc/haproxy/haproxy.cfg
+      
+  - name: Start haproxy service
+    service:
+      name: haproxy
+      enabled: true
+      state: restarted

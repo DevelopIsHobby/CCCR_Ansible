@@ -1,0 +1,33 @@
+ ---
+- name: MySQL setting Master
+  hosts: dbserver
+  become: true
+  remote_user: devops
+  vars:
+    - server_id: server-id=1
+    - log_bin: log-bin=/var/log/mariadb/mariadb.log
+  tasks:
+  - name: Configure Masater /ect/my.cnf
+    template:
+      src: templates/my.cnf.j2
+      dest: /etc/my.cnf
+  - name: MySQL restart
+    service:
+      name: mariadb
+      state: restarted
+- name: MySQL setting Slave
+  hosts: dbserver2
+  become: true
+  remote_user: devops
+  vars: 
+    - server_id: server-id=2
+    - log_bin: log-bin=/var/log/mariadb/mariadb.log
+  tasks:
+  - name: Configure Slave /etc/my.cnf
+    template:
+      src: templates/my.cnf.j2
+      dest: /etc/my.cnf
+  - name: MySQL restart
+    service:
+      name: mariadb
+      state: restarted

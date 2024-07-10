@@ -1,0 +1,77 @@
+---
+- hosts: webserver
+  become: true
+  remote_user: devops
+  vars:               # 템플릿에 사용할 변수
+    document_root: /var/www/html/wordpress
+    server_name: www.webserver.com
+    error_log: /var/log/httpd/www.webserver.com-error_log
+    custom_log: /var/log/httpd/www.webserver.com-access_log
+
+  tasks:
+  - name: Configure Apache using template       # 템플릿을 사용해 가상 호스트 생성
+    template:
+      src: templates/named.conf.j2
+      dest: /etc/httpd/conf.d/00-www.webserver.com.conf
+      
+  - name: Install Repository
+    yum:
+      name: "{{ item }}"
+      state: present
+    loop:         
+      - epel-release                      # 추가 저장소
+      - libsemanage-python                # Semanage
+      - https://rpms.remirepo.net/enterprise/remi-release-7.rpm  # 추가 저장소
+  - name: Enable Remi Repository       # Remi 저장소 활성화
+    shell: yum-config-manager --enable remi-php74
+
+  - name: Install apache, mariadb, php, nfs-utils
+    yum: 
+      name: "{{ item }}"
+      state: present
+    loop:
+      - httpd
+            - mariadb
+      - php
+      - php-common
+      - php-cli
+      - php-mysql
+      - nfs-utils
+  - name: Open http, nfs-utils            # 서비스 시작하면, 포트 개방할 필요 없음
+    firewalld:
+      immediate: true
+      permanent: true
+      service: "{{ item }}"
+      state: enabled
+    loop:
+      - http
+      - nfs
+
+  - name: Mount 
+    mount:
+      path: /var/www/html
+      src: 192.168.56.7:/wordpress
+      fstype: nfs
+      state: mounted
+  - name: Set owenrship
+    file:
+      path: "/var/www/html/wordpress"
+      state: directory
+      recurse: true
+      owner: apache
+      group: apache
+
+  - name: Restart apache
+    service:
+      name: httpd
+      state: restarted
+      enabled: true
+  - name: Active seboolean for httpd, nfs
+    seboolean:
+      name: "{{ item }}"
+      state: true
+      persistent: true
+    loop:
+      - httpd_can_network_connect
+      - httpd_can_network_connect_db
+      - httpd_use_nfs

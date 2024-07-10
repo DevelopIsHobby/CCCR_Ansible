@@ -3,50 +3,66 @@
     </div>
     <div align= "center"> 
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> 🐶개발환경 </h2>  
-    <div style="font-weight: 700; font-size: 15px; text-align: center; color: #282d33;"> </li>통합개발환경(IDE) : Intellij<br></li>JDK버전 : JDK 17<br></li>스프링부 버전 : 3.2.5<br></li>데이터베이스 : MariaDB<br></li>빌드 툴 : Gradle<br> </div> 
+    <div style="font-weight: 700; font-size: 15px; text-align: center; color: #282d33;"> </li>컨트롤 노드 : <b>우분투</b><br></li>제어노드 : <b>CentOS 7</b><br></li>서버 종류 : <b>웹 서버 2개, DB 서버2개, 스토리지 서버 1개, DNS 서버 1개</b><br></li>네트워크 : <b>Nat Network(DNS) + Host Only Network(Web, DB, Storage)</b><br></li></div> 
     </div>
     <div align= "center"> 
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> 🧸구현기능 </h2>  
     <div style="font-weight: 700; font-size: 15px; text-align: center; color: #282d33;">
-    <i>무한스크롤</i><br>
-    <i>좋아요</i><br>
-    <i>스크랩 & 마이페이지</i><br>
-    <i>검색 + 태그</i><br>
-    <i>파일첨부 & 썸네일</i><br>
-    <i>날짜 업데이트</i> <br>
-    <i>게시글 CRUD</i> <br>
-    <i>댓글 CRUD</i>
+    <i>워드 프레스 생성</i><br>
+    <i>워드 프레스 로드 밸런싱</i><br>
+    <i>도메인 설정</i><br>
+    <i>NFS & iSCSI</i><br>
+    <i>DB 이중화</i><br>
+    <i>DB 로드 밸런싱</i> <br>
    </div> 
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;">  :paw_prints: 아키텍처 </h2>  
     <div style="font-weight: 700; font-size: 15px; text-align: center; color: #282d33;">
         <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/e9d8937c-14ef-44a1-ade8-f05227ce1157">
-   </div> 
+    </div> 
     <div align= "center"> 
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> 🌹기능설명 </h2>  
     <div style="font-weight: 700; font-size: 15px; text-align: center; color: #282d33;">
-  <h3>1. 무한스크롤</h3>
-  <details><img src="https://github.com/DevelopIsHobby/MyBoard/assets/107912101/f0cbbbda-f8ec-41a3-85f4-f0f8f9e15dad"width="800" height="400" >
+  <h3>1. 워드프레스 생성</h3>
+  <details>
+  <h5>첫 번째 워드 프레스</h5>    
+  <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/e70f1b95-341e-4cfb-b1c6-e5b3a3b490c3"width="800" height="400" >
+  <h5>두 번째 워드 프레스</h5>
+  <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/111dd14e-160b-4303-96d3-bd0a87aec8ac"width="800" height="400" >
     </details>
 
-   <h3>2. 좋아요</h3>
+   <h3>2. 워드프레스 로드 밸런싱</h3>
       <details>
-        <img src="https://github.com/DevelopIsHobby/MyBoard/assets/107912101/3aaede2d-a9c7-4019-b4cc-48478ef71bb4" width="800" height="400"></details>
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/4fc7a34a-8f45-404d-a6c0-5635ca1a4c52" width="350" height="130">
+        <h5>로드밸런서 서버 IP로 접속</h5>
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/47034694-d5d8-4762-a583-264545b0e459" width="800" height="400"></details>
 
-  <h3>3. 스크랩 & 마이페이지</h3>
-    <details><img src="https://github.com/DevelopIsHobby/MyBoard/assets/107912101/48855487-d365-4045-ae18-efe6c0391413" width="800" height="400"></details>
+  <h3>3. 도메인 설정</h3>
+    <details>
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/84bc0a5d-e0ae-45c3-ad7a-e1869c3c3a50" width="350" height="130">
+        <h5>도메인(webserver.com)으로 검색</h5>
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/4b0e99f1-c545-4fd6-976e-688aad5e5c3b" width="800" height="200"></details>
 
-   <h3>4. 검색 + 태그</h3>
+   <h3>4. NFS & iSCSI</h3>
       <details>
-        <img src="https://github.com/DevelopIsHobby/MyBoard/assets/107912101/cbab2be1-70a8-4e8c-a268-479817c5c506" width="800" height="400"></details>
-
-   <h3>5. 파일첨부 & 썸네일</h3>
-      <details>
-        <img src="https://github.com/DevelopIsHobby/MyBoard/assets/107912101/e87b680f-711b-42f7-b5bb-41d64ca1854c" width="800" height="400">
-          <h5>사진 클릭시 원본 파일 애니메이션</h5>
+        <h5>워드프레스 서버 : NFS 공유폴더안에 있는 /wordpress</h5>
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/d1b9ed50-ed30-4f01-bb78-051c80d52b3b" width="550" height="130">
+        <h5>DB 서버 : iSCSI로 제공받은 /dev/sdb에 /db 마운트</h5>
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/0d6d75ce-2541-408e-bec5-76b02581f0ed" width="350" height="90">
+          <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/93148976-daca-4f5e-ae3d-b14c111ded30" width="600" height="200">
+        <h5>DB 서버 : /db로 MariaDB 기본 디렉토리 위치 변경</h5>
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/0a60dd99-7a3e-4860-a0a9-541ddd95b97f" width="350" height="200">
       </details>
-        
+   <h3>5. DB 이중화</h3>
+      <details>
+        <h5>DB 서버 : 데이터베이스 추가 전</h5>
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/a04de574-b438-4989-89a9-7defa0e9024b" width="300" height="200">
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/86d16047-9608-4968-91b0-bd9bf4747634" width="300" height="200">
+          <h5>DB 서버 : Slave_test2 데이터베이스 추가 후</h5>
+          <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/975a2d1f-123a-4de9-8c20-395a738a9e4b" width="300" height="320">
+          <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/484aa630-e104-426f-ae82-603ce29097f5" width="300" height="320">
+      </details>
 
-   <h3>6. 게시글 CRUD</h3> 
+<h3>6. 게시글 CRUD</h3> 
    <details>
        <h6>게시글 등록</h6>
           <details><img src="https://github.com/DevelopIsHobby/MyBoard/assets/107912101/e18c5fce-2612-478e-9c1e-1a046fd4c083"  width="800" height="400">

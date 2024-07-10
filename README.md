@@ -19,7 +19,7 @@
    </div> 
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;">  :paw_prints: 아키텍처 </h2>  
     <div style="font-weight: 700; font-size: 15px; text-align: center; color: #282d33;">
-        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/895c1994-786e-4ab3-b5c7-0d917c6e057a">
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/e9d8937c-14ef-44a1-ade8-f05227ce1157">
    </div> 
     <div align= "center"> 
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> 🌹기능설명 </h2>  

@@ -32,13 +32,15 @@
 
    <h3>2. 워드프레스 로드 밸런싱</h3>
       <details>
+        <h5>HAProxy 설정</h5>
         <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/4fc7a34a-8f45-404d-a6c0-5635ca1a4c52" width="350" height="130">
-        <h5>로드밸런서 서버 IP로 접속</h5>
+        <h5>HAProxy 서버 IP로 접속</h5>
         <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/47034694-d5d8-4762-a583-264545b0e459" width="800" height="400"></details>
 
   <h3>3. 도메인 설정</h3>
     <details>
-        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/84bc0a5d-e0ae-45c3-ad7a-e1869c3c3a50" width="350" height="130">
+        <h5>도메인(webserver.com) 설정</h5>
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/84bc0a5d-e0ae-45c3-ad7a-e1869c3c3a50" width="450" height="200">
         <h5>도메인(webserver.com)으로 검색</h5>
         <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/4b0e99f1-c545-4fd6-976e-688aad5e5c3b" width="800" height="200"></details>
 
@@ -47,7 +49,7 @@
         <h5>워드프레스 서버 : NFS 공유폴더안에 있는 /wordpress</h5>
         <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/d1b9ed50-ed30-4f01-bb78-051c80d52b3b" width="550" height="130">
         <h5>DB 서버 : iSCSI로 제공받은 /dev/sdb에 /db 마운트</h5>
-        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/0d6d75ce-2541-408e-bec5-76b02581f0ed" width="350" height="90">
+        <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/0d6d75ce-2541-408e-bec5-76b02581f0ed" width="350" height="90"><br>
           <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/93148976-daca-4f5e-ae3d-b14c111ded30" width="600" height="200">
         <h5>DB 서버 : /db로 MariaDB 기본 디렉토리 위치 변경</h5>
         <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/0a60dd99-7a3e-4860-a0a9-541ddd95b97f" width="350" height="200">
@@ -62,55 +64,38 @@
           <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/484aa630-e104-426f-ae82-603ce29097f5" width="300" height="320">
       </details>
 
-<h3>6. 게시글 CRUD</h3> 
+<h3>6. DB 로드 밸런싱</h3> 
    <details>
-       <h6>게시글 등록</h6>
-          <details><img src="https://github.com/DevelopIsHobby/MyBoard/assets/107912101/e18c5fce-2612-478e-9c1e-1a046fd4c083"  width="800" height="400">
-          </details>
-    <h6>게시글 수정</h6>
-       <details><img src="https://github.com/DevelopIsHobby/MyBoard/assets/107912101/410263ce-ca74-4629-91f1-d06c9e45ecc4"  width="800" height="400">
-          </details>
-    <h6>게시글 삭제</h6>
-              <details><img src="https://github.com/DevelopIsHobby/MyBoard/assets/107912101/2107edc0-2700-4162-9f2c-fe0b0519a610"  width="800" height="400">
-          </details>
-    </details>
-    
-   <h3>7. 댓글 CRUD</h3> 
-   <details>
-    <h6>댓글 등록</h6>
-          <details><img src="https://github.com/DevelopIsHobby/MyBoard/assets/107912101/bbdac3ca-1f92-4f5e-bbe7-57632ab1e8dc3"  width="800" height="400">
-          </details>
-    <h6>댓글 수정 및 삭제</h6>
-       <details><img src="https://github.com/DevelopIsHobby/MyBoard/assets/107912101/5bf3b4cb-a0a7-4666-acf4-0e2791157d644"  width="800" height="400">
-          </details>
+       <h5>HAProxy 설정</h5>
+       <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/75f0e744-7a67-4385-b570-38536d7f8d04" width="380" height="180">
+       <h5>HAProxy 서버 IP로 핑을 날렸을 때의 응답</h5>
+       <img src="https://github.com/DevelopIsHobby/CCCR_Ansible/assets/107912101/397b2271-329f-43b7-8db6-1b0dc165fea4"  width="800" height="300">
     </details>
    </div>
    </div> 
     </div>
     <div align= "center">
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> 🛠️ Tech Stacks </h2> <br> 
-    <div style="margin: 0 auto; text-align: center;" align= "center"> <img src="https://img.shields.io/badge/Java-007396?style=plastic&logo=Java&logoColor=white">
-          <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=plastic&logo=Spring Boot&logoColor=white">
-          <img src="https://img.shields.io/badge/MariaDB-003545?style=plastic&logo=MariaDB&logoColor=white">
-          <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=plastic&logo=Javascript&logoColor=white">
-          <img src="https://img.shields.io/badge/jQuery-0769AD?style=plastic&logo=jQuery&logoColor=white">
-          <br/><img src="https://img.shields.io/badge/HTML5-E34F26?style=plastic&logo=HTML5&logoColor=white">
-          <img src="https://img.shields.io/badge/Bootstrap-7952B3?style=plastic&logo=Bootstrap&logoColor=white">
+    <div style="margin: 0 auto; text-align: center;" align= "center">
+          <img src="https://img.shields.io/badge/Linux-FCC624?style=plastic&logo=Linux&logoColor=black">
+          <img src="https://img.shields.io/badge/Ansible-EE0000?style=plastic&logo=Ansible&logoColor=white">
           </div>
     </div>
 <div align="center">
   <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;">😃 소감 🥲</h2>
-    :star:그동안 웹에 대해 공부하면서 넣어보고 싶었던 기능들을 모두 구현해 볼 수 있어서 매우 뿌듯하다.<br>
-    :star:JPA와 Gardle을 활용해 볼 수 있어서 좋았다.<br>
-    :sweat_drops:무한스크롤에서 위치를 기억시켜 List 버튼을 클릭했을 때 원래 있던 위치로 가게 하는 것을 구현하지 못했다.<br>
-    :sweat_drops:스프링 시큐리티 적용 못한 것이 아쉽다.<br>
-    :punch:일정 시간 동안 일정 수 이상의 추천을 받을 경우 핫 게시판이 되게 하는 기능도 넣어보고 싶다.
+    :star:리눅스 프로젝트 땐 DB 로드 밸런싱까지 진행하지 못했는데, 이번엔 모두 진행할 수 있어서 매우 뿌듯하다.<br>
+    :star:플레이북을 통해 가상머신을 빠르게 복구할 수 있어서 편리했다.<br>
+    :sweat_drops:DNS 서버, 스토리지 서버의 이중화까지 진행하지 못한 부분이 아쉽다..<br>
 </div>
 
 
 <div align= "center">
     <h2 style="border-bottom: 1px solid #d8dee4; color: #282d33;"> 🧑‍💻 Contact me </h2> <br> 
-    <div align= "center"> <a href=https://www.notion.so/05ab0f771bb5433faebb8061defc48c4?pvs=4> <img src="https://img.shields.io/badge/Notion-000000?style=plastic&logo=Notion&logoColor=white&link=https://www.notion.so/05ab0f771bb5433faebb8061defc48c4?pvs=4"> </a>
+    <div align= "center"> 
+        <a href="https://github.com/DevelopIsHobby"> 
+            <img src="https://img.shields.io/badge/GitHub-ffffff?style=plastic&logo=GitHub&logoColor=black&link=https://github.com/DevelopIsHobby"> 
+        </a>
+        <a href=https://www.notion.so/05ab0f771bb5433faebb8061defc48c4?pvs=4> <img src="https://img.shields.io/badge/Notion-000000?style=plastic&logo=Notion&logoColor=white&link=https://www.notion.so/05ab0f771bb5433faebb8061defc48c4?pvs=4"> </a>
           </div>  <br> 
     <div align= "center">  </div> 
 </div>
